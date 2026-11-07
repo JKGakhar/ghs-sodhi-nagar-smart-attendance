@@ -846,7 +846,7 @@
 
     <form
       id="attendanceForm"
-      action="https://docs.google.com/forms/d/e/1FAIpQLSfIftgofq_voDF1mOuAESNGgnTE6HSudhYGivdsXdba5cQBIw/viewform"
+      action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfIftgofq_voDF1mOuAESNGgnTE6HSudhYGivdsXdba5cQBIw/formResponse"
       method="POST"
       target="hidden_iframe"
       style="display: none"
@@ -1308,11 +1308,35 @@
            ========================================================================== */
       function submitToGoogleForms(rollNumber) {
         rollNumberInput.value = rollNumber;
+        
+        // Method A: Hidden HTML Form Submit
         try {
           attendanceForm.submit();
-          console.log(`[Google Form] Submitted Roll: ${rollNumber}`);
+          console.log(`[Google Form] Form submitted for Roll: ${rollNumber}`);
         } catch (e) {
           console.error("Google Form submission error:", e);
+        }
+
+        // Method B: Direct fetch POST (Guaranteed background transmission)
+        try {
+          const formEndpoint = attendanceForm.action;
+          const params = new URLSearchParams();
+          params.append("entry.1387489529", rollNumber);
+
+          fetch(formEndpoint, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: params.toString()
+          }).then(() => {
+            console.log(`[Google Form Fetch] Direct POST dispatched for Roll: ${rollNumber}`);
+          }).catch(err => {
+            console.warn("Direct fetch note:", err);
+          });
+        } catch (err) {
+          console.warn("Direct fetch exception:", err);
         }
       }
 
