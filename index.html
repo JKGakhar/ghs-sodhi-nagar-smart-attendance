@@ -19,784 +19,8 @@
       type="text/javascript"
     ></script>
 
-    <style>
-      /* ==========================================================================
-           1. DESIGN SYSTEM & CSS VARIABLES
-           ========================================================================== */
-      :root {
-        --primary: #1e3a8a; /* Classic School Navy */
-        --primary-hover: #1d4ed8;
-        --primary-light: #eff6ff;
-        --primary-border: #bfdbfe;
-        --accent: #3b82f6; /* Bright Blue Accent */
-        --success: #059669; /* Emerald Green for Recorded Scans */
-        --success-light: #ecfdf5;
-        --warning: #d97706; /* Amber for Cooldown State */
-        --warning-light: #fef3c7;
-        --danger: #dc2626; /* Red for Camera Errors */
-        --danger-light: #fef2f2;
-        --bg-body: #f8fafc;
-        --bg-card: #ffffff;
-        --text-main: #0f172a;
-        --text-muted: #64748b;
-        --border: #e2e8f0;
-        --radius: 12px;
-        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-        --shadow-md:
-          0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
-        --shadow-lg:
-          0 10px 15px -3px rgba(0, 0, 0, 0.1),
-          0 4px 6px -4px rgba(0, 0, 0, 0.05);
-      }
-
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family:
-          "Segoe UI",
-          system-ui,
-          -apple-system,
-          BlinkMacSystemFont,
-          Roboto,
-          sans-serif;
-      }
-
-      body {
-        background-color: var(--bg-body);
-        color: var(--text-main);
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        line-height: 1.5;
-      }
-
-      /* ==========================================================================
-           2. HEADER & NAVIGATION TABS
-           ========================================================================== */
-      .school-header {
-        background: linear-gradient(135deg, #172554 0%, var(--primary) 100%);
-        color: #ffffff;
-        padding: 1.2rem 1rem 0;
-        box-shadow: var(--shadow-md);
-      }
-
-      .header-content {
-        max-width: 1100px;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 1rem;
-        padding-bottom: 1rem;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 0.85rem;
-      }
-
-      .school-badge {
-        background: rgba(255, 255, 255, 0.15);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-      }
-
-      .school-info h1 {
-        font-size: 1.35rem;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-      }
-
-      .school-info p {
-        font-size: 0.85rem;
-        color: #cbd5e1;
-      }
-
-      .system-time-badge {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 0.4rem 0.85rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-variant-numeric: tabular-nums;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-      }
-
-      /* Navigation Tabs */
-      .tabs-nav {
-        max-width: 1100px;
-        margin: 0 auto;
-        display: flex;
-        gap: 0.5rem;
-      }
-
-      .tab-btn {
-        background: transparent;
-        color: #93c5fd;
-        border: none;
-        padding: 0.75rem 1.25rem;
-        font-size: 0.95rem;
-        font-weight: 600;
-        cursor: pointer;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: all 0.2s ease;
-      }
-
-      .tab-btn:hover {
-        color: #ffffff;
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      .tab-btn.active {
-        background: var(--bg-body);
-        color: var(--primary);
-      }
-
-      /* ==========================================================================
-           3. MAIN CONTAINER & VIEWS
-           ========================================================================== */
-      .main-container {
-        max-width: 1100px;
-        width: 100%;
-        margin: 1.5rem auto;
-        padding: 0 1rem;
-        flex: 1;
-      }
-
-      .tab-pane {
-        display: none;
-      }
-
-      .tab-pane.active {
-        display: block;
-      }
-
-      /* Grid Layout for Scanner Tab */
-      .scanner-grid {
-        display: grid;
-        grid-template-columns: 1.2fr 0.8fr;
-        gap: 1.5rem;
-        align-items: start;
-      }
-
-      @media (max-width: 860px) {
-        .scanner-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .portal-card {
-        background-color: var(--bg-card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow-sm);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .card-header {
-        padding: 1rem 1.25rem;
-        border-bottom: 1px solid var(--border);
-        background-color: #fafbfc;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .card-title {
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--primary);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .card-body {
-        padding: 1.25rem;
-      }
-
-      /* ==========================================================================
-           4. CAMERA SCANNER & NOTREADABLEERROR RECOVERY UI
-           ========================================================================== */
-      .camera-toolbar {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-
-      .select-input {
-        flex: 1;
-        min-width: 180px;
-        padding: 0.55rem 0.85rem;
-        border-radius: 6px;
-        border: 1px solid var(--border);
-        font-size: 0.85rem;
-        background-color: #ffffff;
-        color: var(--text-main);
-        outline: none;
-      }
-
-      .select-input:focus {
-        border-color: var(--accent);
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.4rem;
-        padding: 0.55rem 1rem;
-        border-radius: 6px;
-        border: 1px solid transparent;
-        font-size: 0.85rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-decoration: none;
-      }
-
-      .btn-primary {
-        background-color: var(--primary);
-        color: #ffffff;
-      }
-
-      .btn-primary:hover {
-        background-color: var(--primary-hover);
-      }
-
-      .btn-secondary {
-        background-color: #f1f5f9;
-        color: var(--text-main);
-        border-color: var(--border);
-      }
-
-      .btn-secondary:hover {
-        background-color: #e2e8f0;
-      }
-
-      .btn-success {
-        background-color: var(--success);
-        color: #ffffff;
-      }
-
-      .btn-success:hover {
-        background-color: #047857;
-      }
-
-      .scanner-frame {
-        position: relative;
-        background: #090d16;
-        border-radius: var(--radius);
-        overflow: hidden;
-        border: 2px solid var(--border);
-        min-height: 280px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      #reader {
-        width: 100% !important;
-        border: none !important;
-      }
-
-      /* Clean up HTML5 QR Code's default buttons */
-      #reader video {
-        border-radius: 8px;
-        object-fit: cover;
-      }
-
-      #reader__dashboard_section_csr button,
-      #reader button {
-        background-color: var(--primary) !important;
-        color: #fff !important;
-        border: none !important;
-        border-radius: 6px !important;
-        padding: 8px 14px !important;
-        font-size: 0.85rem !important;
-        font-weight: 600 !important;
-        cursor: pointer !important;
-        margin: 4px !important;
-      }
-
-      /* Dedicated Camera Error Box (specifically for NotReadableError) */
-      .camera-trouble-alert {
-        display: none;
-        background-color: var(--danger-light);
-        border: 1px solid #fecaca;
-        border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        color: #991b1b;
-        font-size: 0.85rem;
-      }
-
-      .camera-trouble-alert h4 {
-        font-size: 0.95rem;
-        margin-bottom: 0.35rem;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-      }
-
-      .camera-trouble-alert ul {
-        margin-left: 1.25rem;
-        margin-top: 0.35rem;
-        line-height: 1.4;
-      }
-
-      /* Local File Upload QR Scanner (Fallback) */
-      .file-scan-box {
-        margin-top: 1rem;
-        border: 2px dashed var(--border);
-        border-radius: 8px;
-        padding: 0.85rem;
-        text-align: center;
-        background-color: #f8fafc;
-        transition: all 0.2s ease;
-      }
-
-      .file-scan-box:hover {
-        border-color: var(--accent);
-        background-color: var(--primary-light);
-      }
-
-      .file-scan-box label {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--primary);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      /* ==========================================================================
-           5. STATUS BANNERS & PROGRESS BARS
-           ========================================================================== */
-      .status-container {
-        margin-top: 1rem;
-      }
-
-      .status-banner {
-        padding: 1rem;
-        border-radius: 8px;
-        border: 1px solid transparent;
-        display: flex;
-        align-items: center;
-        gap: 0.85rem;
-        transition: all 0.3s ease;
-      }
-
-      .status-banner.ready {
-        background-color: #f1f5f9;
-        border-color: var(--border);
-        color: var(--text-muted);
-      }
-
-      .status-banner.success {
-        background-color: var(--success-light);
-        border-color: #a7f3d0;
-        color: var(--success);
-        animation: pulseSuccess 0.35s ease-out;
-      }
-
-      .status-banner.cooldown {
-        background-color: var(--warning-light);
-        border-color: #fde68a;
-        color: var(--warning);
-      }
-
-      @keyframes pulseSuccess {
-        0% {
-          transform: scale(0.98);
-        }
-        50% {
-          transform: scale(1.02);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-
-      .status-icon {
-        font-size: 1.5rem;
-        flex-shrink: 0;
-      }
-
-      .status-text h4 {
-        font-size: 0.95rem;
-        font-weight: 700;
-      }
-
-      .status-text p {
-        font-size: 0.85rem;
-        opacity: 0.9;
-      }
-
-      .progress-bar-container {
-        height: 4px;
-        width: 100%;
-        background-color: #e2e8f0;
-        border-radius: 2px;
-        margin-top: 0.75rem;
-        overflow: hidden;
-        display: none;
-      }
-
-      .progress-bar {
-        height: 100%;
-        width: 100%;
-        background-color: var(--warning);
-        transition: width 0.1s linear;
-      }
-
-      /* ==========================================================================
-           6. SESSION LOG TABLE
-           ========================================================================== */
-      .badge-count {
-        background-color: var(--primary);
-        color: white;
-        font-size: 0.75rem;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-weight: 600;
-      }
-
-      .log-table-container {
-        max-height: 420px;
-        overflow-y: auto;
-      }
-
-      .attendance-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.85rem;
-        text-align: left;
-      }
-
-      .attendance-table th {
-        background-color: #f8fafc;
-        color: var(--text-muted);
-        font-weight: 600;
-        padding: 8px 12px;
-        border-bottom: 1px solid var(--border);
-        position: sticky;
-        top: 0;
-        z-index: 1;
-      }
-
-      .attendance-table td {
-        padding: 10px 12px;
-        border-bottom: 1px solid var(--border);
-        vertical-align: middle;
-      }
-
-      .roll-chip {
-        display: inline-block;
-        background: #e0e7ff;
-        color: #3730a3;
-        font-weight: 600;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-family: monospace;
-      }
-
-      .status-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        color: var(--success);
-        font-weight: 600;
-        font-size: 0.8rem;
-      }
-
-      .empty-state {
-        text-align: center;
-        padding: 3rem 1rem;
-        color: var(--text-muted);
-      }
-
-      .empty-state span {
-        font-size: 2.2rem;
-        display: block;
-        margin-bottom: 0.5rem;
-        opacity: 0.6;
-      }
-
-      /* ==========================================================================
-           7. QR STUDIO & ID CARD GENERATOR TAB
-           ========================================================================== */
-      .generator-layout {
-        display: grid;
-        grid-template-columns: 360px 1fr;
-        gap: 1.5rem;
-        align-items: start;
-      }
-
-      @media (max-width: 900px) {
-        .generator-layout {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .form-group {
-        margin-bottom: 1rem;
-      }
-
-      .form-label {
-        display: block;
-        font-size: 0.82rem;
-        font-weight: 600;
-        color: var(--text-main);
-        margin-bottom: 0.35rem;
-      }
-
-      .form-control {
-        width: 100%;
-        padding: 0.6rem 0.8rem;
-        border-radius: 6px;
-        border: 1px solid var(--border);
-        font-size: 0.85rem;
-        outline: none;
-        transition: border-color 0.2s ease;
-      }
-
-      .form-control:focus {
-        border-color: var(--accent);
-      }
-
-      .sub-tabs {
-        display: flex;
-        background: #f1f5f9;
-        padding: 4px;
-        border-radius: 8px;
-        margin-bottom: 1.25rem;
-        gap: 4px;
-      }
-
-      .sub-tab-btn {
-        flex: 1;
-        padding: 6px;
-        border: none;
-        background: transparent;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: var(--text-muted);
-        border-radius: 6px;
-        cursor: pointer;
-      }
-
-      .sub-tab-btn.active {
-        background: #ffffff;
-        color: var(--primary);
-        box-shadow: var(--shadow-sm);
-      }
-
-      /* Generated Student Badges Grid */
-      .cards-toolbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.75rem 1.25rem;
-        background: #f8fafc;
-        border-bottom: 1px solid var(--border);
-        flex-wrap: wrap;
-        gap: 0.75rem;
-      }
-
-      .badge-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 1.25rem;
-        padding: 1.25rem;
-      }
-
-      /* Student ID Badge Component */
-      .student-id-card {
-        background: #ffffff;
-        border: 1px solid #cbd5e1;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: var(--shadow-sm);
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        position: relative;
-        break-inside: avoid;
-      }
-
-      .id-card-header {
-        background: linear-gradient(135deg, #1e3a8a, #2563eb);
-        color: #ffffff;
-        padding: 0.75rem 0.5rem;
-      }
-
-      .id-card-header h5 {
-        font-size: 0.8rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .id-card-header p {
-        font-size: 0.65rem;
-        opacity: 0.85;
-      }
-
-      .id-card-body {
-        padding: 1rem 0.75rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex: 1;
-      }
-
-      .qr-canvas-holder {
-        background: #ffffff;
-        padding: 8px;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        margin-bottom: 0.75rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 140px;
-        min-width: 140px;
-      }
-
-      .qr-canvas-holder img,
-      .qr-canvas-holder canvas {
-        display: block;
-        margin: 0 auto;
-      }
-
-      .student-name {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: var(--text-main);
-        margin-bottom: 0.2rem;
-      }
-
-      .student-meta {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        margin-bottom: 0.5rem;
-      }
-
-      .roll-badge {
-        background-color: #eff6ff;
-        color: var(--primary);
-        font-weight: 700;
-        padding: 3px 10px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        border: 1px solid var(--primary-border);
-      }
-
-      .id-card-actions {
-        padding: 0.5rem;
-        background: #fafbfc;
-        border-top: 1px solid var(--border);
-        display: flex;
-        gap: 0.4rem;
-      }
-
-      .id-card-actions button {
-        flex: 1;
-        padding: 4px;
-        font-size: 0.75rem;
-      }
-
-      /* ==========================================================================
-           8. PRINT STYLING
-           When the teacher clicks "Print All Cards", only the badges print!
-           ========================================================================== */
-      @media print {
-        body {
-          background: #ffffff !important;
-        }
-        .school-header,
-        .tabs-nav,
-        .generator-sidebar,
-        .cards-toolbar,
-        .id-card-actions,
-        .setup-tip,
-        footer {
-          display: none !important;
-        }
-        .main-container {
-          margin: 0 !important;
-          padding: 0 !important;
-          max-width: 100% !important;
-        }
-        .generator-layout {
-          grid-template-columns: 1fr !important;
-        }
-        .portal-card {
-          border: none !important;
-          box-shadow: none !important;
-        }
-        .badge-grid {
-          grid-template-columns: repeat(3, 1fr) !important;
-          gap: 15px !important;
-          padding: 0 !important;
-        }
-        .student-id-card {
-          box-shadow: none !important;
-          border: 1px dashed #64748b !important;
-        }
-      }
-
-      .setup-tip {
-        margin: 1.5rem auto 0;
-        max-width: 1100px;
-        padding: 0 1rem;
-        width: 100%;
-      }
-
-      .tip-box {
-        background-color: #eff6ff;
-        border: 1px dashed var(--accent);
-        border-radius: var(--radius);
-        padding: 1rem 1.25rem;
-        font-size: 0.85rem;
-        color: #1e3a8a;
-      }
-
-      .tip-box code {
-        background-color: #dbeafe;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-family: monospace;
-        font-weight: 600;
-      }
-
-      footer {
-        text-align: center;
-        padding: 1.5rem;
-        color: var(--text-muted);
-        font-size: 0.8rem;
-        margin-top: auto;
-      }
-    </style>
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <!-- ==========================================================================
@@ -807,10 +31,9 @@
         <div class="brand">
           <div class="school-badge">🏫</div>
           <div class="school-info">
-            <h1>GHS Sodhi Nagar - Smart Attendance</h1>
-            <p>
-              Computer Science Dept. • Automated Student Check-In &amp; QR
-              Studio
+            <h1 id="headerSchoolName">GHS Sodhi Nagar - Smart Attendance</h1>
+            <p id="headerSchoolMeta">
+              Computer Science Dept. • Automated Student Check-In &amp; QR Studio
             </p>
           </div>
         </div>
@@ -851,7 +74,24 @@
       target="hidden_iframe"
       style="display: none"
     >
-      <input type="text" name="entry.1387489529" id="rollNumberInput" />
+      <!-- 1. School Name -->
+      <input type="text" name="entry.1447813474" id="formSchoolName" />
+      <!-- 2. UDISE Code -->
+      <input type="text" name="entry.1535794069" id="formUdise" />
+      <!-- 3. District -->
+      <input type="text" name="entry.410509425" id="formDistrict" />
+      <!-- 4. Block -->
+      <input type="text" name="entry.1061570109" id="formBlock" />
+      <!-- 5. Roll Number -->
+      <input type="text" name="entry.1387489529" id="formRollNumber" />
+      <!-- 6. Student Full Name -->
+      <input type="text" name="entry.682409470" id="formStudentName" />
+      <!-- 7. Father's Name -->
+      <input type="text" name="entry.1853188349" id="formFatherName" />
+      <!-- 8. Date of Birth (YYYY-MM-DD) -->
+      <input type="text" name="entry.102067023" id="formDob" />
+      <!-- 9. Class & Section -->
+      <input type="text" name="entry.1201426497" id="formClass" />
     </form>
 
     <!-- ==========================================================================
@@ -994,7 +234,17 @@
                 </svg>
                 Live Session Attendance
               </span>
-              <span class="badge-count" id="totalScansBadge">0 Scanned</span>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="badge-count" id="totalScansBadge">0 Scanned Today</span>
+                <button
+                  class="btn btn-secondary"
+                  style="padding: 2px 8px; font-size: 0.72rem;"
+                  onclick="clearTodayAttendance()"
+                  title="Reset duplicate tracker & clear table for today"
+                >
+                  Reset Today
+                </button>
+              </div>
             </div>
 
             <div class="card-body" style="padding: 0">
@@ -1002,14 +252,16 @@
                 <table class="attendance-table" id="attendanceTable">
                   <thead>
                     <tr>
-                      <th>Roll Number</th>
-                      <th>Timestamp</th>
-                      <th>Status</th>
+                      <th>Student Info</th>
+                      <th>Father Name</th>
+                      <th>DOB &amp; Class</th>
+                      <th>School &amp; UDISE</th>
+                      <th>Time &amp; Status</th>
                     </tr>
                   </thead>
                   <tbody id="attendanceLogBody">
                     <tr id="emptyRow">
-                      <td colspan="3">
+                      <td colspan="5">
                         <div class="empty-state">
                           <span>📋</span>
                           <p>No records captured yet in this session.</p>
@@ -1029,109 +281,218 @@
              ==================================================================== -->
       <div class="tab-pane" id="paneGenerator">
         <div class="generator-layout">
-          <!-- Left Sidebar: Entry & Upload Forms -->
-          <div class="portal-card generator-sidebar">
-            <div class="card-header">
-              <span class="card-title">Student Information</span>
+          <!-- Left Sidebar: School Settings & Student Entry -->
+          <div class="generator-sidebar">
+            
+            <!-- School Profile & Location Details (Shared across all badges) -->
+            <div class="portal-card" style="margin-bottom: 1.25rem;">
+              <div class="card-header">
+                <span class="card-title">🏫 School &amp; Regional Details</span>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="form-label">School Name</label>
+                  <input
+                    type="text"
+                    id="schoolNameInput"
+                    class="form-control"
+                    value="GHS Sodhi Nagar"
+                    placeholder="e.g. GHS Sodhi Nagar"
+                  />
+                </div>
+                <div class="form-row">
+                  <div class="form-group" style="flex: 1;">
+                    <label class="form-label">UDISE Code</label>
+                    <input
+                      type="text"
+                      id="udiseInput"
+                      class="form-control"
+                      value="03110805402"
+                      placeholder="e.g. 03110805402"
+                    />
+                  </div>
+                  <div class="form-group" style="flex: 1;">
+                    <label class="form-label">Block</label>
+                    <input
+                      type="text"
+                      id="blockInput"
+                      class="form-control"
+                      value="Ghall Khurd"
+                      placeholder="e.g. Ghall Khurd"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">District</label>
+                  <input
+                    type="text"
+                    id="districtInput"
+                    class="form-control"
+                    value="Firozpur"
+                    placeholder="e.g. Firozpur"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div class="card-body">
-              <!-- Toggle between Single Entry vs Bulk Upload -->
-              <div class="sub-tabs">
-                <button
-                  class="sub-tab-btn active"
-                  id="subTabSingle"
-                  onclick="switchSubTab('single')"
-                >
-                  Single Student
-                </button>
-                <button
-                  class="sub-tab-btn"
-                  id="subTabBulk"
-                  onclick="switchSubTab('bulk')"
-                >
-                  Bulk CSV / List
-                </button>
+            <!-- Student Data Entry Card -->
+            <div class="portal-card">
+              <div class="card-header">
+                <span class="card-title">👤 Student Information</span>
               </div>
 
-              <!-- 1. Single Student Form -->
-              <div id="formSingle">
-                <div class="form-group">
-                  <label class="form-label">Roll Number (Unique ID) *</label>
-                  <input
-                    type="text"
-                    id="singleRoll"
-                    class="form-control"
-                    placeholder="e.g. 101"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Full Name *</label>
-                  <input
-                    type="text"
-                    id="singleName"
-                    class="form-control"
-                    placeholder="e.g. Aarav Sharma"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Class &amp; Section</label>
-                  <input
-                    type="text"
-                    id="singleClass"
-                    class="form-control"
-                    placeholder="e.g. 10th - A"
-                    value="10th - A"
-                  />
-                </div>
-                <button
-                  class="btn btn-primary"
-                  style="width: 100%"
-                  onclick="addSingleStudent()"
-                >
-                  + Generate Student Card
-                </button>
-              </div>
-
-              <!-- 2. Bulk Upload Form -->
-              <div id="formBulk" style="display: none">
-                <div class="form-group">
-                  <label class="form-label">Upload CSV File</label>
-                  <input
-                    type="file"
-                    id="csvFileInput"
-                    accept=".csv, .txt"
-                    class="form-control"
-                    onchange="handleCSVFile(this)"
-                  />
-                </div>
-                <div class="form-group">
-                  <label class="form-label"
-                    >Or Paste List (Roll, Name, Class):</label
+              <div class="card-body">
+                <!-- Toggle between Single Entry vs Bulk Upload -->
+                <div class="sub-tabs">
+                  <button
+                    class="sub-tab-btn active"
+                    id="subTabSingle"
+                    onclick="switchSubTab('single')"
                   >
-                  <textarea
-                    id="bulkTextInput"
-                    class="form-control"
-                    rows="6"
-                    placeholder="101, Rohan Sharma, 10-A&#10;102, Simran Kaur, 10-A&#10;103, Aman Verma, 10-B"
-                  ></textarea>
+                    Single Student
+                  </button>
+                  <button
+                    class="sub-tab-btn"
+                    id="subTabBulk"
+                    onclick="switchSubTab('bulk')"
+                  >
+                    Bulk CSV / List
+                  </button>
                 </div>
-                <div style="display: flex; gap: 0.5rem">
+
+                <!-- 1. Single Student Form -->
+                <div id="formSingle">
+                  <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                      <label class="form-label">Roll Number *</label>
+                      <input
+                        type="text"
+                        id="singleRoll"
+                        class="form-control"
+                        placeholder="e.g. 101"
+                        required
+                      />
+                    </div>
+                    <div class="form-group" style="flex: 1.2;">
+                      <label class="form-label">Class &amp; Section *</label>
+                      <input
+                        type="text"
+                        id="singleClass"
+                        class="form-control"
+                        placeholder="e.g. 10th - A"
+                        value="10th - A"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Student Full Name *</label>
+                    <input
+                      type="text"
+                      id="singleName"
+                      class="form-control"
+                      placeholder="e.g. Aarav Sharma"
+                      required
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Father's Name *</label>
+                    <input
+                      type="text"
+                      id="singleFather"
+                      class="form-control"
+                      placeholder="e.g. Rajesh Sharma"
+                      required
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Date of Birth (DOB) *</label>
+                    <input
+                      type="date"
+                      id="singleDob"
+                      class="form-control"
+                      value="2010-08-15"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Student Photo (Passport Size)</label>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                      <input
+                        type="file"
+                        id="singlePhotoFile"
+                        accept="image/*"
+                        class="form-control"
+                        onchange="previewStudentPhoto(this)"
+                      />
+                      <img
+                        id="singlePhotoThumb"
+                        src=""
+                        alt="Preview"
+                        style="display: none; width: 38px; height: 46px; object-fit: cover; border-radius: 4px; border: 1.5px solid var(--border);"
+                      />
+                    </div>
+                    <input
+                      type="text"
+                      id="singlePhotoUrl"
+                      class="form-control"
+                      style="margin-top: 6px;"
+                      value="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=180&fit=crop&crop=face"
+                      placeholder="Or paste Photo URL (Dummy image pre-filled)"
+                    />
+                    <small style="color: var(--text-muted); font-size: 0.72rem;">Pre-filled with a sample dummy photo. You can upload a photo file or paste any image URL.</small>
+                  </div>
+
                   <button
                     class="btn btn-primary"
-                    style="flex: 1"
-                    onclick="processBulkText()"
+                    style="width: 100%"
+                    onclick="addSingleStudent()"
                   >
-                    Generate All
+                    + Generate Student ID Card
                   </button>
-                  <button class="btn btn-secondary" onclick="loadSampleData()">
-                    Load Sample
-                  </button>
+                </div>
+
+                <!-- 2. Bulk Upload Form -->
+                <div id="formBulk" style="display: none">
+                  <div class="form-group">
+                    <label class="form-label">Upload CSV File</label>
+                    <input
+                      type="file"
+                      id="csvFileInput"
+                      accept=".csv, .txt"
+                      class="form-control"
+                      onchange="handleCSVFile(this)"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label"
+                      >Paste List (Roll, Name, FatherName, DOB, Class):</label
+                    >
+                    <textarea
+                      id="bulkTextInput"
+                      class="form-control"
+                      rows="6"
+                      placeholder="101, Aarav Sharma, Rajesh Sharma, 15-08-2010, 10-A&#10;102, Simran Kaur, Gurdeep Singh, 12-05-2010, 10-A&#10;103, Rohan Verma, Ashok Verma, 22-11-2009, 10-B"
+                    ></textarea>
+                  </div>
+                  <div style="display: flex; gap: 0.5rem">
+                    <button
+                      class="btn btn-primary"
+                      style="flex: 1"
+                      onclick="processBulkText()"
+                    >
+                      Generate All
+                    </button>
+                    <button class="btn btn-secondary" onclick="loadSampleData()">
+                      Load Sample
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
+
           </div>
 
           <!-- Right Area: Generated Printable Badges -->
@@ -1140,12 +501,19 @@
               <div>
                 <strong id="badgeCounter">0 Cards Generated</strong>
                 <p style="font-size: 0.75rem; color: var(--text-muted)">
-                  Print these badges for students to scan during roll call.
+                  Official student identity cards with School, UDISE, Father's Name &amp; DOB.
                 </p>
               </div>
-              <div style="display: flex; gap: 0.5rem">
+              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <!-- Preview Zoom Controls for Easy Screen Reading -->
+                <div class="zoom-controls" title="Adjust on-screen view size (Print remains 100% standard CR80)">
+                  <span style="font-size: 0.72rem; font-weight: 600; color: var(--text-muted); margin-right: 2px;">View:</span>
+                  <button type="button" class="zoom-btn" onclick="setCardZoom(1, this)">100%</button>
+                  <button type="button" class="zoom-btn active" onclick="setCardZoom(1.25, this)">125%</button>
+                  <button type="button" class="zoom-btn" onclick="setCardZoom(1.4, this)">140%</button>
+                </div>
                 <button class="btn btn-success" onclick="window.print()">
-                  🖨️ Print All ID Badges
+                  🖨️ Print / Save as PDF
                 </button>
                 <button class="btn btn-secondary" onclick="clearAllBadges()">
                   Clear All
@@ -1164,550 +532,19 @@
     <!-- Classroom Setup Banner -->
     <div class="setup-tip">
       <div class="tip-box">
-        <strong>💡 Teacher &amp; Student CS Tip:</strong>
-        Use the <strong>QR Studio</strong> tab to quickly generate cards for
-        your class. You can print them or download individual QR images to test
-        the camera or file scanner!
+        <strong>💡 Government School CS Tip:</strong>
+        Each generated card embeds the student's complete profile (School, UDISE, District, Block, Name, Father's Name, DOB, Roll &amp; Class) directly into its QR code. When scanned, all details are displayed on screen and transmitted to Google Sheets automatically!
       </div>
     </div>
 
     <!-- Footer -->
     <footer>
-      &copy; 2026 GHS Sodhi Nagar • Computer Science Educational Project •
-      Single File Architecture
+      &copy; 2026 GHS Sodhi Nagar • Computer Science Educational Project
     </footer>
 
     <!-- ==========================================================================
-         D. JAVASCRIPT LOGIC
+         APPLICATION JAVASCRIPT
          ========================================================================== -->
-    <script>
-      /* ==========================================================================
-           1. APP STATE & CONSTANTS
-           ========================================================================== */
-      const COOLDOWN_MS = 4000;
-      let isCooldownActive = false;
-      let totalScansCount = 0;
-      let html5QrCode = null;
-      let availableCameras = [];
-      let studentsList = [];
-
-      /* ==========================================================================
-           2. DOM REFERENCES
-           ========================================================================== */
-      const attendanceForm = document.getElementById("attendanceForm");
-      const rollNumberInput = document.getElementById("rollNumberInput");
-      const cameraSelect = document.getElementById("cameraSelect");
-      const cameraTroubleAlert = document.getElementById("cameraTroubleAlert");
-      const cameraStatusPill = document.getElementById("cameraStatusPill");
-      const statusBanner = document.getElementById("statusBanner");
-      const statusIcon = document.getElementById("statusIcon");
-      const statusTitle = document.getElementById("statusTitle");
-      const statusDesc = document.getElementById("statusDesc");
-      const cooldownProgress = document.getElementById("cooldownProgressBox");
-      const cooldownBar = document.getElementById("cooldownBar");
-      const attendanceLogBody = document.getElementById("attendanceLogBody");
-      const emptyRow = document.getElementById("emptyRow");
-      const totalScansBadge = document.getElementById("totalScansBadge");
-      const liveClock = document.getElementById("liveClock");
-      const badgeContainer = document.getElementById("badgeContainer");
-      const badgeCounter = document.getElementById("badgeCounter");
-
-      /* ==========================================================================
-           3. LIVE DIGITAL CLOCK
-           ========================================================================== */
-      function updateLiveClock() {
-        const now = new Date();
-        const timeOpts = {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: true,
-        };
-        const dateOpts = { weekday: "short", month: "short", day: "numeric" };
-        liveClock.textContent = `${now.toLocaleDateString(undefined, dateOpts)} • ${now.toLocaleTimeString(undefined, timeOpts)}`;
-      }
-      setInterval(updateLiveClock, 1000);
-      updateLiveClock();
-
-      /* ==========================================================================
-           4. TAB SWITCHING (Scanner vs QR Studio)
-           ========================================================================== */
-      function switchTab(tabName) {
-        const tabScanner = document.getElementById("tabBtnScanner");
-        const tabGenerator = document.getElementById("tabBtnGenerator");
-        const paneScanner = document.getElementById("paneScanner");
-        const paneGenerator = document.getElementById("paneGenerator");
-
-        if (tabName === "scanner") {
-          tabScanner.classList.add("active");
-          tabGenerator.classList.remove("active");
-          paneScanner.classList.add("active");
-          paneGenerator.classList.remove("active");
-        } else {
-          tabGenerator.classList.add("active");
-          tabScanner.classList.remove("active");
-          paneGenerator.classList.add("active");
-          paneScanner.classList.remove("active");
-        }
-      }
-
-      function switchSubTab(subTab) {
-        const subSingle = document.getElementById("subTabSingle");
-        const subBulk = document.getElementById("subTabBulk");
-        const formSingle = document.getElementById("formSingle");
-        const formBulk = document.getElementById("formBulk");
-
-        if (subTab === "single") {
-          subSingle.classList.add("active");
-          subBulk.classList.remove("active");
-          formSingle.style.display = "block";
-          formBulk.style.display = "none";
-        } else {
-          subBulk.classList.add("active");
-          subSingle.classList.remove("active");
-          formSingle.style.display = "none";
-          formBulk.style.display = "block";
-        }
-      }
-
-      /* ==========================================================================
-           5. WEB AUDIO SYNTHESIZER (880Hz Chime)
-           ========================================================================== */
-      function playSuccessBeep() {
-        try {
-          const AudioCtx = window.AudioContext || window.webkitAudioContext;
-          const audioCtx = new AudioCtx();
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(
-            1320,
-            audioCtx.currentTime + 0.12,
-          );
-
-          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(
-            0.001,
-            audioCtx.currentTime + 0.25,
-          );
-
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-
-          osc.start();
-          osc.stop(audioCtx.currentTime + 0.25);
-        } catch (err) {
-          console.warn("Web Audio API unavailable:", err);
-        }
-      }
-
-      /* ==========================================================================
-           6. GOOGLE FORMS SILENT SUBMISSION
-           ========================================================================== */
-      function submitToGoogleForms(rollNumber) {
-        rollNumberInput.value = rollNumber;
-        
-        // Method A: Hidden HTML Form Submit
-        try {
-          attendanceForm.submit();
-          console.log(`[Google Form] Form submitted for Roll: ${rollNumber}`);
-        } catch (e) {
-          console.error("Google Form submission error:", e);
-        }
-
-        // Method B: Direct fetch POST (Guaranteed background transmission)
-        try {
-          const formEndpoint = attendanceForm.action;
-          const params = new URLSearchParams();
-          params.append("entry.1387489529", rollNumber);
-
-          fetch(formEndpoint, {
-            method: "POST",
-            mode: "no-cors",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: params.toString()
-          }).then(() => {
-            console.log(`[Google Form Fetch] Direct POST dispatched for Roll: ${rollNumber}`);
-          }).catch(err => {
-            console.warn("Direct fetch note:", err);
-          });
-        } catch (err) {
-          console.warn("Direct fetch exception:", err);
-        }
-      }
-
-      /* ==========================================================================
-           7. ATTENDANCE LOG & COOLDOWN
-           ========================================================================== */
-      function recordAttendance(rollNumber) {
-        if (emptyRow && emptyRow.parentNode) {
-          emptyRow.remove();
-        }
-
-        totalScansCount++;
-        totalScansBadge.textContent = `${totalScansCount} Scanned`;
-
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: true,
-        });
-
-        const row = document.createElement("tr");
-        row.innerHTML = `
-                <td><span class="roll-chip">${escapeHtml(rollNumber)}</span></td>
-                <td style="color: var(--text-muted);">${timeStr}</td>
-                <td>
-                    <span class="status-pill">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        Recorded
-                    </span>
-                </td>
-            `;
-        attendanceLogBody.insertBefore(row, attendanceLogBody.firstChild);
-
-        triggerCooldown(rollNumber);
-      }
-
-      function triggerCooldown(rollNumber) {
-        isCooldownActive = true;
-
-        statusBanner.className = "status-banner success";
-        statusIcon.textContent = "✅";
-        statusTitle.textContent = `Roll No: ${rollNumber} - Attendance Marked!`;
-        statusDesc.textContent =
-          "Data successfully captured. Please wait for scanner to reset.";
-
-        cooldownProgress.style.display = "block";
-        cooldownBar.style.transition = "none";
-        cooldownBar.style.width = "100%";
-
-        setTimeout(() => {
-          cooldownBar.style.transition = `width ${COOLDOWN_MS}ms linear`;
-          cooldownBar.style.width = "0%";
-        }, 50);
-
-        setTimeout(() => {
-          if (isCooldownActive) {
-            statusBanner.className = "status-banner cooldown";
-            statusIcon.textContent = "⏳";
-            statusTitle.textContent = "Scanner in Cooldown";
-            statusDesc.textContent = "Re-arming camera for next student...";
-          }
-        }, 1500);
-
-        setTimeout(() => {
-          isCooldownActive = false;
-          cooldownProgress.style.display = "none";
-          statusBanner.className = "status-banner ready";
-          statusIcon.textContent = "📷";
-          statusTitle.textContent = "Scanner Ready";
-          statusDesc.textContent =
-            "Position student QR code within camera frame or choose an image file.";
-        }, COOLDOWN_MS);
-      }
-
-      /* ==========================================================================
-           8. CAMERA INITIALIZATION & NOTREADABLEERROR HANDLING
-           ========================================================================== */
-      async function initCameraSystem() {
-        html5QrCode = new Html5Qrcode("reader");
-
-        try {
-          // Discover all video hardware devices
-          availableCameras = await Html5Qrcode.getCameras();
-          cameraSelect.innerHTML = "";
-
-          if (availableCameras && availableCameras.length > 0) {
-            availableCameras.forEach((cam, index) => {
-              const opt = document.createElement("option");
-              opt.value = cam.id;
-              opt.text = cam.label || `Camera ${index + 1}`;
-              cameraSelect.appendChild(opt);
-            });
-
-            // Start first available camera
-            startSelectedCamera();
-          } else {
-            cameraSelect.innerHTML =
-              '<option value="">No cameras detected</option>';
-            cameraStatusPill.textContent = "No Hardware Found";
-          }
-        } catch (err) {
-          handleCameraError(err);
-        }
-      }
-
-      async function startSelectedCamera() {
-        const cameraId = cameraSelect.value;
-        if (!cameraId || !html5QrCode) return;
-
-        cameraTroubleAlert.style.display = "none";
-        cameraStatusPill.textContent = "Connecting...";
-
-        // If already scanning, stop first
-        if (html5QrCode.isScanning) {
-          try {
-            await html5QrCode.stop();
-          } catch (e) {
-            console.warn("Error stopping previous stream", e);
-          }
-        }
-
-        const config = {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
-          aspectRatio: 1.0,
-        };
-
-        html5QrCode
-          .start(
-            cameraId,
-            config,
-            (decodedText) => onScanSuccess(decodedText),
-            (errorMessage) => {
-              /* Seeking frames - silent */
-            },
-          )
-          .then(() => {
-            cameraStatusPill.textContent = "● Camera Active";
-            cameraStatusPill.style.color = "var(--success)";
-          })
-          .catch((err) => {
-            handleCameraError(err);
-          });
-      }
-
-      async function stopCamera() {
-        if (html5QrCode && html5QrCode.isScanning) {
-          await html5QrCode.stop();
-          cameraStatusPill.textContent = "Stopped";
-          cameraStatusPill.style.color = "var(--text-muted)";
-        }
-      }
-
-      function handleCameraError(err) {
-        console.error("Camera initialization failed:", err);
-        cameraStatusPill.textContent = "Error Starting";
-        cameraStatusPill.style.color = "var(--danger)";
-
-        // Check specifically for NotReadableError or permission denials
-        const errString = (err && err.toString()) || "";
-        if (
-          errString.includes("NotReadableError") ||
-          err.name === "NotReadableError"
-        ) {
-          cameraTroubleAlert.style.display = "block";
-        } else if (
-          errString.includes("NotAllowedError") ||
-          err.name === "NotAllowedError"
-        ) {
-          statusBanner.className = "status-banner cooldown";
-          statusTitle.textContent = "Permission Denied";
-          statusDesc.textContent =
-            "Please click the lock/camera icon in your browser URL bar to allow camera access.";
-        }
-      }
-
-      function onScanSuccess(decodedText) {
-        const cleanRoll = decodedText.trim();
-        if (isCooldownActive || !cleanRoll) return;
-
-        playSuccessBeep();
-        submitToGoogleForms(cleanRoll);
-        recordAttendance(cleanRoll);
-      }
-
-      /* Scan from static image file (fallback) */
-      function scanImageFile(inputElement) {
-        if (!inputElement.files || inputElement.files.length === 0) return;
-        const file = inputElement.files[0];
-
-        if (!html5QrCode) {
-          html5QrCode = new Html5Qrcode("reader");
-        }
-
-        html5QrCode
-          .scanFile(file, true)
-          .then((decodedText) => {
-            onScanSuccess(decodedText);
-          })
-          .catch((err) => {
-            alert(
-              "Could not detect a valid QR code in that image. Please try another image.",
-            );
-          });
-      }
-
-      /* ==========================================================================
-           9. STUDENT QR CODE GENERATOR & PRINT BADGES
-           ========================================================================== */
-      function addSingleStudent() {
-        const roll = document.getElementById("singleRoll").value.trim();
-        const name = document.getElementById("singleName").value.trim();
-        const cls =
-          document.getElementById("singleClass").value.trim() || "Class 10";
-
-        if (!roll || !name) {
-          alert("Please enter both Roll Number and Full Name.");
-          return;
-        }
-
-        createStudentCard({ roll, name, cls });
-
-        // Reset inputs
-        document.getElementById("singleRoll").value = "";
-        document.getElementById("singleName").value = "";
-      }
-
-      function handleCSVFile(input) {
-        if (!input.files || input.files.length === 0) return;
-        const file = input.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-          const text = e.target.result;
-          document.getElementById("bulkTextInput").value = text;
-          processBulkText();
-        };
-        reader.readAsText(file);
-      }
-
-      function processBulkText() {
-        const raw = document.getElementById("bulkTextInput").value.trim();
-        if (!raw) {
-          alert("Please enter student details or upload a CSV.");
-          return;
-        }
-
-        const lines = raw.split(/\r?\n/);
-        lines.forEach((line, index) => {
-          const parts = line.split(",");
-          if (parts.length >= 2) {
-            const roll = parts[0].trim();
-            const name = parts[1].trim();
-            const cls = parts[2] ? parts[2].trim() : "Class 10";
-
-            // Skip CSV header rows if present
-            if (
-              roll.toLowerCase().includes("roll") ||
-              name.toLowerCase().includes("name")
-            ) {
-              return;
-            }
-
-            if (roll && name) {
-              createStudentCard({ roll, name, cls });
-            }
-          }
-        });
-      }
-
-      function loadSampleData() {
-        const sample = `101, Aarav Sharma, Class 10-A\n102, Simran Kaur, Class 10-A\n103, Rohan Verma, Class 10-B\n104, Priya Patel, Class 10-B`;
-        document.getElementById("bulkTextInput").value = sample;
-        processBulkText();
-      }
-
-      function createStudentCard(student) {
-        studentsList.push(student);
-        badgeCounter.textContent = `${studentsList.length} Cards Generated`;
-
-        const card = document.createElement("div");
-        card.className = "student-id-card";
-        const uniqueId = `qr-${student.roll}-${studentsList.length}-${Math.random().toString(36).substring(2, 7)}`;
-
-        card.innerHTML = `
-                <div class="id-card-header">
-                    <h5>GHS Sodhi Nagar</h5>
-                    <p>Student Attendance Card</p>
-                </div>
-                <div class="id-card-body">
-                    <div class="qr-canvas-holder" id="${uniqueId}"></div>
-                    <div class="student-name">${escapeHtml(student.name)}</div>
-                    <div class="student-meta">${escapeHtml(student.cls)}</div>
-                    <div class="roll-badge">Roll: ${escapeHtml(student.roll)}</div>
-                </div>
-                <div class="id-card-actions">
-                    <button class="btn btn-secondary" onclick="downloadQRCode('${uniqueId}', '${student.roll}')">💾 Save QR</button>
-                    <button class="btn btn-primary" onclick="testInScanner('${student.roll}')">⚡ Test Scan</button>
-                </div>
-            `;
-
-        badgeContainer.appendChild(card);
-
-        // Generate QR Code inside card
-        setTimeout(() => {
-          const holder = document.getElementById(uniqueId);
-          if (holder) {
-            if (typeof QRCode !== "undefined") {
-              new QRCode(holder, {
-                text: student.roll,
-                width: 120,
-                height: 120,
-                colorDark: "#1e3a8a",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H,
-              });
-            } else {
-              // Fallback image generator
-              holder.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(student.roll)}" alt="QR">`;
-            }
-          }
-        }, 50);
-      }
-
-      function clearAllBadges() {
-        studentsList = [];
-        badgeContainer.innerHTML = "";
-        badgeCounter.textContent = "0 Cards Generated";
-      }
-
-      function downloadQRCode(holderId, roll) {
-        const holder = document.getElementById(holderId);
-        const img = holder.querySelector("img");
-        const canvas = holder.querySelector("canvas");
-
-        let dataUrl = "";
-        if (canvas) {
-          dataUrl = canvas.toDataURL("image/png");
-        } else if (img) {
-          dataUrl = img.src;
-        }
-
-        if (dataUrl) {
-          const a = document.createElement("a");
-          a.href = dataUrl;
-          a.download = `Student_Roll_${roll}_QR.png`;
-          a.click();
-        }
-      }
-
-      function testInScanner(roll) {
-        switchTab("scanner");
-        onScanSuccess(roll);
-      }
-
-      function escapeHtml(text) {
-        const div = document.createElement("div");
-        div.textContent = text;
-        return div.innerHTML;
-      }
-
-      /* ==========================================================================
-           10. ONLOAD INITIALIZATION
-           ========================================================================== */
-      window.addEventListener("DOMContentLoaded", () => {
-        initCameraSystem();
-      });
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
