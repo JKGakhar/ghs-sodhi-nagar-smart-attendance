@@ -335,44 +335,12 @@ function submitToGoogleForms(student) {
   setVal("formDob", dobVal);
   setVal("formClass", classVal);
 
-  // Method A: Hidden HTML Form Submit
+  // Single, reliable hidden iframe form submission (Sent exactly once per scan)
   try {
     attendanceForm.submit();
-    console.log(`[Google Form] 9-column form submitted for: ${nameVal} (Roll: ${rollVal})`);
+    console.log(`[Google Form] Single submission dispatched for: ${nameVal} (Roll: ${rollVal})`);
   } catch (e) {
     console.error("Google Form submission error:", e);
-  }
-
-  // Method B: Direct fetch POST (Guaranteed background transmission across all 9 individual columns)
-  try {
-    const formEndpoint = attendanceForm.action;
-    const params = new URLSearchParams();
-    params.append("entry.1447813474", schoolVal);
-    params.append("entry.1535794069", udiseVal);
-    params.append("entry.410509425", distVal);
-    params.append("entry.1061570109", blockVal);
-    params.append("entry.1387489529", rollVal);
-    params.append("entry.682409470", nameVal);
-    params.append("entry.1853188349", fatherVal);
-    params.append("entry.102067023", dobVal);
-    params.append("entry.1201426497", classVal);
-
-    fetch(formEndpoint, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: params.toString(),
-    })
-      .then(() => {
-        console.log(`[Google Form Fetch] 9-column POST dispatched for: ${nameVal}`);
-      })
-      .catch((err) => {
-        console.warn("Direct fetch note:", err);
-      });
-  } catch (err) {
-    console.warn("Direct fetch exception:", err);
   }
 }
 
@@ -381,16 +349,12 @@ function submitToGoogleForms(student) {
    ========================================================================== */
 function renderAttendanceRow(student, timeStr) {
   const row = document.createElement("tr");
-  const photoSrc = student.photo || getStudentPhoto(null, student.name, student.roll);
 
   row.innerHTML = `
     <td>
       <div style="display: flex; align-items: center; gap: 8px;">
-        <img src="${escapeHtml(photoSrc)}" class="table-avatar" alt="Photo" onerror="this.onerror=null;this.src='${DEFAULT_AVATAR}';" />
-        <div>
-          <span class="roll-chip">#${escapeHtml(student.roll)}</span>
-          <strong style="margin-left: 4px; font-size: 0.9rem;">${escapeHtml(student.name)}</strong>
-        </div>
+        <span class="roll-chip">#${escapeHtml(student.roll)}</span>
+        <strong style="font-size: 0.9rem; color: var(--text-main);">${escapeHtml(student.name)}</strong>
       </div>
     </td>
     <td style="color: #334155;">
@@ -402,7 +366,7 @@ function renderAttendanceRow(student, timeStr) {
     </td>
     <td>
       <div style="font-weight: 600; color: var(--primary);">${escapeHtml(student.school || 'GHS Sodhi Nagar')}</div>
-      <small style="color: var(--text-muted);">UDISE: ${escapeHtml(student.udise || '03010100101')}</small>
+      <small style="color: var(--text-muted);">UDISE: ${escapeHtml(student.udise || '03110805402')}</small>
     </td>
     <td>
       <div style="color: var(--text-muted); font-size: 0.78rem;">${escapeHtml(timeStr)}</div>
@@ -461,7 +425,7 @@ function triggerSuccessCooldown(student) {
     statusBanner.className = "status-banner ready";
     statusIcon.textContent = "📷";
     statusTitle.textContent = "Scanner Ready";
-    statusDesc.textContent = "Position student QR code within camera frame or choose an image file.";
+    statusDesc.textContent = "Position student QR code within camera frame.";
   }, COOLDOWN_MS);
 }
 
@@ -489,7 +453,7 @@ function triggerDuplicateAlert(student, existingRecord) {
     statusBanner.className = "status-banner ready";
     statusIcon.textContent = "📷";
     statusTitle.textContent = "Scanner Ready";
-    statusDesc.textContent = "Position student QR code within camera frame or choose an image file.";
+    statusDesc.textContent = "Position student QR code within camera frame.";
   }, DUPLICATE_COOLDOWN);
 }
 
@@ -511,6 +475,11 @@ async function initCameraSystem() {
         cameraSelect.appendChild(opt);
       });
 
+      // Automatically switch and start camera whenever user changes dropdown selection
+      cameraSelect.onchange = () => {
+        startSelectedCamera();
+      };
+
       startSelectedCamera();
     } else {
       cameraSelect.innerHTML = '<option value="">No cameras detected</option>';
@@ -526,11 +495,14 @@ async function startSelectedCamera() {
   if (!cameraId || !html5QrCode) return;
 
   cameraTroubleAlert.style.display = "none";
-  cameraStatusPill.textContent = "Connecting...";
+  cameraStatusPill.textContent = "Switching camera...";
+  cameraStatusPill.style.color = "var(--warning)";
 
   if (html5QrCode.isScanning) {
     try {
       await html5QrCode.stop();
+      // Allow 100ms for OS to cleanly release previous video stream lock
+      await new Promise(r => setTimeout(r, 100));
     } catch (e) {
       console.warn("Error stopping previous stream", e);
     }
@@ -597,6 +569,9 @@ function onScanSuccess(decodedText) {
 
   const raw = decodedText.trim();
   if (!raw) return;
+
+  // Immediately lock to prevent camera frame-burst from processing twice
+  isCooldownActive = true;
 
   let student = null;
 
