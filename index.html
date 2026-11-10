@@ -132,20 +132,22 @@
             <div class="card-body">
               <!-- Camera Selector & Controls Toolbar -->
               <div class="camera-toolbar">
-                <select id="cameraSelect" class="select-input">
+                <select id="cameraSelect" class="select-input" onchange="startSelectedCamera()" title="Camera will automatically start when selected">
                   <option value="">Detecting cameras...</option>
                 </select>
                 <button
                   id="btnStartCamera"
                   class="btn btn-primary"
                   onclick="startSelectedCamera()"
+                  title="Start or restart selected camera"
                 >
-                  ▶ Restart Camera
+                  ▶ Start Camera
                 </button>
                 <button
                   id="btnStopCamera"
                   class="btn btn-secondary"
                   onclick="stopCamera()"
+                  title="Turn off camera"
                 >
                   ⏹ Stop
                 </button>
@@ -181,20 +183,6 @@
                 <div id="reader"></div>
               </div>
 
-              <!-- Scan From Local Image (Zero-hardware fallback) -->
-              <div class="file-scan-box">
-                <label for="qrFileInput">
-                  📁 Or Click Here to Scan a QR Code Image File
-                </label>
-                <input
-                  type="file"
-                  id="qrFileInput"
-                  accept="image/*"
-                  style="display: none"
-                  onchange="scanImageFile(this)"
-                />
-              </div>
-
               <!-- Status Notification Banner -->
               <div class="status-container">
                 <div id="statusBanner" class="status-banner ready">
@@ -202,8 +190,7 @@
                   <div class="status-text">
                     <h4 id="statusTitle">Scanner Ready</h4>
                     <p id="statusDesc">
-                      Position student QR code within camera frame or choose an
-                      image file.
+                      Position student QR code within camera frame.
                     </p>
                   </div>
                 </div>
