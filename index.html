@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GHS Sodhi Nagar - Smart Attendance & QR Studio</title>
+    <title>QR Based Smart Attendance System</title>
 
     <!-- ==========================================================================
          EXTERNAL LIBRARIES (via CDN)
@@ -31,9 +31,10 @@
         <div class="brand">
           <div class="school-badge">🏫</div>
           <div class="school-info">
-            <h1 id="headerSchoolName">GHS Sodhi Nagar - Smart Attendance</h1>
+            <h1 id="headerSchoolName">QR Based Smart Attendance</h1>
             <p id="headerSchoolMeta">
-              Computer Science Dept. • Automated Student Check-In &amp; QR Studio
+              Computer Science Dept. • Automated Student Check-In &amp; QR
+              Studio
             </p>
           </div>
         </div>
@@ -132,7 +133,12 @@
             <div class="card-body">
               <!-- Camera Selector & Controls Toolbar -->
               <div class="camera-toolbar">
-                <select id="cameraSelect" class="select-input" onchange="startSelectedCamera()" title="Camera will automatically start when selected">
+                <select
+                  id="cameraSelect"
+                  class="select-input"
+                  onchange="startSelectedCamera()"
+                  title="Camera will automatically start when selected"
+                >
                   <option value="">Detecting cameras...</option>
                 </select>
                 <button
@@ -221,11 +227,13 @@
                 </svg>
                 Live Session Attendance
               </span>
-              <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <span class="badge-count" id="totalScansBadge">0 Scanned Today</span>
+              <div style="display: flex; align-items: center; gap: 0.5rem">
+                <span class="badge-count" id="totalScansBadge"
+                  >0 Scanned Today</span
+                >
                 <button
                   class="btn btn-secondary"
-                  style="padding: 2px 8px; font-size: 0.72rem;"
+                  style="padding: 2px 8px; font-size: 0.72rem"
                   onclick="clearTodayAttendance()"
                   title="Reset duplicate tracker & clear table for today"
                 >
@@ -270,25 +278,24 @@
         <div class="generator-layout">
           <!-- Left Sidebar: School Settings & Student Entry -->
           <div class="generator-sidebar">
-            
             <!-- School Profile & Location Details (Shared across all badges) -->
-            <div class="portal-card" style="margin-bottom: 1.25rem;">
+            <div class="portal-card" style="margin-bottom: 1.25rem">
               <div class="card-header">
                 <span class="card-title">🏫 School &amp; Regional Details</span>
               </div>
               <div class="card-body">
-                <div class="form-group">
-                  <label class="form-label">School Name</label>
-                  <input
-                    type="text"
-                    id="schoolNameInput"
-                    class="form-control"
-                    value="GHS Sodhi Nagar"
-                    placeholder="e.g. GHS Sodhi Nagar"
-                  />
-                </div>
-                <div class="form-row">
-                  <div class="form-group" style="flex: 1;">
+                <div class="form-row" style="flex-wrap: wrap">
+                  <div class="form-group" style="flex: 1.5; min-width: 220px">
+                    <label class="form-label">School Name</label>
+                    <input
+                      type="text"
+                      id="schoolNameInput"
+                      class="form-control"
+                      value="GHS Sodhi Nagar"
+                      placeholder="e.g. GHS Sodhi Nagar"
+                    />
+                  </div>
+                  <div class="form-group" style="flex: 1; min-width: 160px">
                     <label class="form-label">UDISE Code</label>
                     <input
                       type="text"
@@ -298,7 +305,7 @@
                       placeholder="e.g. 03110805402"
                     />
                   </div>
-                  <div class="form-group" style="flex: 1;">
+                  <div class="form-group" style="flex: 1; min-width: 160px">
                     <label class="form-label">Block</label>
                     <input
                       type="text"
@@ -308,16 +315,16 @@
                       placeholder="e.g. Ghall Khurd"
                     />
                   </div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">District</label>
-                  <input
-                    type="text"
-                    id="districtInput"
-                    class="form-control"
-                    value="Firozpur"
-                    placeholder="e.g. Firozpur"
-                  />
+                  <div class="form-group" style="flex: 1; min-width: 160px">
+                    <label class="form-label">District</label>
+                    <input
+                      type="text"
+                      id="districtInput"
+                      class="form-control"
+                      value="Firozpur"
+                      placeholder="e.g. Firozpur"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -349,8 +356,8 @@
 
                 <!-- 1. Single Student Form -->
                 <div id="formSingle">
-                  <div class="form-row">
-                    <div class="form-group" style="flex: 1;">
+                  <div class="form-row" style="flex-wrap: wrap">
+                    <div class="form-group" style="flex: 1; min-width: 140px">
                       <label class="form-label">Roll Number *</label>
                       <input
                         type="text"
@@ -360,7 +367,17 @@
                         required
                       />
                     </div>
-                    <div class="form-group" style="flex: 1.2;">
+                    <div class="form-group" style="flex: 2; min-width: 220px">
+                      <label class="form-label">Student Full Name *</label>
+                      <input
+                        type="text"
+                        id="singleName"
+                        class="form-control"
+                        placeholder="e.g. Aarav Sharma"
+                        required
+                      />
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 140px">
                       <label class="form-label">Class &amp; Section *</label>
                       <input
                         type="text"
@@ -372,41 +389,35 @@
                     </div>
                   </div>
 
-                  <div class="form-group">
-                    <label class="form-label">Student Full Name *</label>
-                    <input
-                      type="text"
-                      id="singleName"
-                      class="form-control"
-                      placeholder="e.g. Aarav Sharma"
-                      required
-                    />
+                  <div class="form-row" style="flex-wrap: wrap">
+                    <div class="form-group" style="flex: 1.5; min-width: 220px">
+                      <label class="form-label">Father's Name *</label>
+                      <input
+                        type="text"
+                        id="singleFather"
+                        class="form-control"
+                        placeholder="e.g. Rajesh Sharma"
+                        required
+                      />
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 180px">
+                      <label class="form-label">Date of Birth (DOB) *</label>
+                      <input
+                        type="date"
+                        id="singleDob"
+                        class="form-control"
+                        value="2010-08-15"
+                      />
+                    </div>
                   </div>
 
                   <div class="form-group">
-                    <label class="form-label">Father's Name *</label>
-                    <input
-                      type="text"
-                      id="singleFather"
-                      class="form-control"
-                      placeholder="e.g. Rajesh Sharma"
-                      required
-                    />
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Date of Birth (DOB) *</label>
-                    <input
-                      type="date"
-                      id="singleDob"
-                      class="form-control"
-                      value="2010-08-15"
-                    />
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Student Photo (Passport Size)</label>
-                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <label class="form-label"
+                      >Student Photo (Passport Size)</label
+                    >
+                    <div
+                      style="display: flex; gap: 0.5rem; align-items: center"
+                    >
                       <input
                         type="file"
                         id="singlePhotoFile"
@@ -418,18 +429,28 @@
                         id="singlePhotoThumb"
                         src=""
                         alt="Preview"
-                        style="display: none; width: 38px; height: 46px; object-fit: cover; border-radius: 4px; border: 1.5px solid var(--border);"
+                        style="
+                          display: none;
+                          width: 38px;
+                          height: 46px;
+                          object-fit: cover;
+                          border-radius: 4px;
+                          border: 1.5px solid var(--border);
+                        "
                       />
                     </div>
                     <input
                       type="text"
                       id="singlePhotoUrl"
                       class="form-control"
-                      style="margin-top: 6px;"
+                      style="margin-top: 6px"
                       value="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=180&fit=crop&crop=face"
                       placeholder="Or paste Photo URL (Dummy image pre-filled)"
                     />
-                    <small style="color: var(--text-muted); font-size: 0.72rem;">Pre-filled with a sample dummy photo. You can upload a photo file or paste any image URL.</small>
+                    <small style="color: var(--text-muted); font-size: 0.72rem"
+                      >Pre-filled with a sample dummy photo. You can upload a
+                      photo file or paste any image URL.</small
+                    >
                   </div>
 
                   <button
@@ -472,14 +493,16 @@
                     >
                       Generate All
                     </button>
-                    <button class="btn btn-secondary" onclick="loadSampleData()">
+                    <button
+                      class="btn btn-secondary"
+                      onclick="loadSampleData()"
+                    >
                       Load Sample
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
 
           <!-- Right Area: Generated Printable Badges -->
@@ -488,16 +511,53 @@
               <div>
                 <strong id="badgeCounter">0 Cards Generated</strong>
                 <p style="font-size: 0.75rem; color: var(--text-muted)">
-                  Official student identity cards with School, UDISE, Father's Name &amp; DOB.
+                  Official student identity cards with School, UDISE, Father's
+                  Name &amp; DOB.
                 </p>
               </div>
-              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+              <div
+                style="
+                  display: flex;
+                  gap: 0.5rem;
+                  align-items: center;
+                  flex-wrap: wrap;
+                "
+              >
                 <!-- Preview Zoom Controls for Easy Screen Reading -->
-                <div class="zoom-controls" title="Adjust on-screen view size (Print remains 100% standard CR80)">
-                  <span style="font-size: 0.72rem; font-weight: 600; color: var(--text-muted); margin-right: 2px;">View:</span>
-                  <button type="button" class="zoom-btn" onclick="setCardZoom(1, this)">100%</button>
-                  <button type="button" class="zoom-btn active" onclick="setCardZoom(1.25, this)">125%</button>
-                  <button type="button" class="zoom-btn" onclick="setCardZoom(1.4, this)">140%</button>
+                <div
+                  class="zoom-controls"
+                  title="Adjust on-screen view size (Print remains 100% standard CR80)"
+                >
+                  <span
+                    style="
+                      font-size: 0.72rem;
+                      font-weight: 600;
+                      color: var(--text-muted);
+                      margin-right: 2px;
+                    "
+                    >View:</span
+                  >
+                  <button
+                    type="button"
+                    class="zoom-btn"
+                    onclick="setCardZoom(1, this)"
+                  >
+                    100%
+                  </button>
+                  <button
+                    type="button"
+                    class="zoom-btn active"
+                    onclick="setCardZoom(1.25, this)"
+                  >
+                    125%
+                  </button>
+                  <button
+                    type="button"
+                    class="zoom-btn"
+                    onclick="setCardZoom(1.4, this)"
+                  >
+                    140%
+                  </button>
                 </div>
                 <button class="btn btn-success" onclick="window.print()">
                   🖨️ Print / Save as PDF
@@ -520,7 +580,10 @@
     <div class="setup-tip">
       <div class="tip-box">
         <strong>💡 Government School CS Tip:</strong>
-        Each generated card embeds the student's complete profile (School, UDISE, District, Block, Name, Father's Name, DOB, Roll &amp; Class) directly into its QR code. When scanned, all details are displayed on screen and transmitted to Google Sheets automatically!
+        Each generated card embeds the student's complete profile (School,
+        UDISE, District, Block, Name, Father's Name, DOB, Roll &amp; Class)
+        directly into its QR code. When scanned, all details are displayed on
+        screen and transmitted to Google Sheets automatically!
       </div>
     </div>
 
