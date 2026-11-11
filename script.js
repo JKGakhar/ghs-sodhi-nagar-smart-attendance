@@ -574,33 +574,39 @@ function onScanSuccess(decodedText) {
   isCooldownActive = true;
 
   let student = null;
+  const profile = getSchoolProfile();
 
   try {
     student = JSON.parse(raw);
+    if (!student.school) student.school = profile.school;
+    if (!student.udise)  student.udise  = profile.udise;
+    if (!student.dist)   student.dist   = profile.dist;
+    if (!student.block)  student.block  = profile.block;
   } catch (e) {
     if (raw.includes("|")) {
       const parts = raw.split("|").map(p => p.trim());
       student = {
-        roll: parts[0] || "Unknown",
-        name: parts[1] || `Roll ${parts[0]}`,
+        roll:   parts[0] || "Unknown",
+        name:   parts[1] || `Roll ${parts[0]}`,
         father: parts[2] || "N/A",
-        dob: parts[3] || "N/A",
-        cls: parts[4] || "Class 10",
-        school: parts[5] || "GHS Sodhi Nagar",
-        udise: parts[6] || "03010100101"
+        dob:    parts[3] || "N/A",
+        cls:    parts[4] || "Class 10-A",
+        school: parts[5] || profile.school,
+        udise:  parts[6] || profile.udise,
+        dist:   parts[7] || profile.dist,
+        block:  parts[8] || profile.block
       };
     } else {
-      const profile = getSchoolProfile();
       student = {
-        roll: raw,
-        name: `Student ${raw}`,
+        roll:   raw,
+        name:   `Student ${raw}`,
         father: "N/A",
-        dob: "N/A",
-        cls: "Class 10-A",
+        dob:    "N/A",
+        cls:    "Class 10-A",
         school: profile.school,
-        udise: profile.udise,
-        block: profile.block,
-        dist: profile.dist
+        udise:  profile.udise,
+        dist:   profile.dist,
+        block:  profile.block
       };
     }
   }
@@ -764,16 +770,149 @@ function processBulkText() {
 
 function loadSampleData() {
   const sample = [
-    "101, Aarav Sharma, Sh. Rajesh Sharma, 15-08-2010, Class 10-A, GHS Sodhi Nagar, 03010100101, Firozpur, Ghall Khurd, https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=180&fit=crop&crop=faces",
-    "102, Simran Kaur, Sh. Gurdeep Singh, 12-05-2010, Class 10-A, GHS Sodhi Nagar, 03010100101, Firozpur, Ghall Khurd, https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=180&fit=crop&crop=faces",
-    "103, Rohan Verma, Sh. Ashok Verma, 22-11-2009, Class 10-B, GHS Sodhi Nagar, 03010100101, Firozpur, Ghall Khurd, https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=180&fit=crop&crop=faces",
-    "104, Priya Patel, Sh. Mukesh Patel, 08-03-2010, Class 10-B, GHS Sodhi Nagar, 03010100101, Firozpur, Ghall Khurd, https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=180&fit=crop&crop=faces",
-    "105, Gurpreet Singh, Sh. Balwinder Singh, 19-09-2010, Class 10-A, GHS Sodhi Nagar, 03010100101, Firozpur, Ghall Khurd, https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=180&fit=crop&crop=faces",
-    "106, Jasleen Kaur, Sh. Harjit Singh, 04-01-2010, Class 10-B, GHS Sodhi Nagar, 03010100101, Firozpur, Ghall Khurd, https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=180&fit=crop&crop=faces"
+    "101, Aarav Sharma, Sh. Rajesh Sharma, 15-08-2010, Class 10-A, GHS Sodhi Nagar, 03110805402, FEROZEPUR, GHALL KHURD, https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=180&fit=crop&crop=faces",
+    "102, Simran Kaur, Sh. Gurdeep Singh, 12-05-2010, Class 10-A, GHS Sodhi Nagar, 03110805402, FEROZEPUR, GHALL KHURD, https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=180&fit=crop&crop=faces",
+    "103, Rohan Verma, Sh. Ashok Verma, 22-11-2009, Class 10-B, GHS Sodhi Nagar, 03110805402, FEROZEPUR, GHALL KHURD, https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=180&fit=crop&crop=faces",
+    "104, Priya Patel, Sh. Mukesh Patel, 08-03-2010, Class 10-B, GHS Sodhi Nagar, 03110805402, FEROZEPUR, GHALL KHURD, https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=180&fit=crop&crop=faces",
+    "105, Gurpreet Singh, Sh. Balwinder Singh, 19-09-2010, Class 10-A, GHS Sodhi Nagar, 03110805402, FEROZEPUR, GHALL KHURD, https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=180&fit=crop&crop=faces",
+    "106, Jasleen Kaur, Sh. Harjit Singh, 04-01-2010, Class 10-B, GHS Sodhi Nagar, 03110805402, FEROZEPUR, GHALL KHURD, https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=180&fit=crop&crop=faces"
   ].join("\n");
 
   document.getElementById("bulkTextInput").value = sample;
   processBulkText();
+}
+
+/**
+ * Robust multi-tier QR code renderer.
+ * Prevents "code length overflow" and empty QR slots by using:
+ * 1. Compact pipe format (clean, ~90-115 chars, never overflows v10 capacity)
+ * 2. Automatic fallback ladder: Level M (15%) -> Level L (7%) -> Minimal -> API fallback
+ * 3. Strict try/catch wrapping so no student card ever remains empty.
+ */
+function renderStudentQRCode(holder, student) {
+  if (!holder) return;
+  holder.innerHTML = "";
+
+  const profile = getSchoolProfile();
+  const school  = student.school || profile.school || "GHS SODHI NAGAR";
+  const udise   = student.udise  || profile.udise  || "03110805402";
+  const dist    = student.dist   || profile.dist   || "FEROZEPUR";
+  const block   = student.block  || profile.block  || "GHALL KHURD";
+  const roll    = String(student.roll || "").trim();
+  const name    = String(student.name || "").trim();
+  const father  = String(student.father || "").trim();
+  const dob     = String(student.dob || "").trim();
+  const cls     = String(student.cls || "").trim();
+
+  // Primary compact payload: 9 fields separated by pipes (clean, ~90-115 chars, never overflows v10)
+  const pipePayload = [roll, name, father, dob, cls, school, udise, dist, block].join("|");
+
+  const jsonPayload = JSON.stringify({
+    roll: roll,
+    name: name,
+    father: father,
+    dob: dob,
+    cls: cls,
+    school: school,
+    udise: udise,
+    dist: dist,
+    block: block
+  });
+
+  let isRendered = false;
+
+  if (typeof QRCode !== "undefined") {
+    // Strategy 1: Compact Pipe payload with Level M (15% error correction, crisp modules, up to 213 chars)
+    try {
+      new QRCode(holder, {
+        text: pipePayload,
+        width: 256,
+        height: 256,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+      if (holder.querySelector("canvas, img")) {
+        isRendered = true;
+      }
+    } catch (e1) {
+      console.warn(`[QR Gen] Pipe Level M failed for Roll ${roll}:`, e1.message);
+      holder.innerHTML = "";
+    }
+
+    // Strategy 2: Compact Pipe payload with Level L (7% error correction, max capacity up to 271 chars)
+    if (!isRendered) {
+      try {
+        new QRCode(holder, {
+          text: pipePayload,
+          width: 256,
+          height: 256,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.L
+        });
+        if (holder.querySelector("canvas, img")) {
+          isRendered = true;
+        }
+      } catch (e2) {
+        console.warn(`[QR Gen] Pipe Level L failed for Roll ${roll}:`, e2.message);
+        holder.innerHTML = "";
+      }
+    }
+
+    // Strategy 3: Try JSON payload with Level L if compact was bypassed
+    if (!isRendered) {
+      try {
+        new QRCode(holder, {
+          text: jsonPayload,
+          width: 256,
+          height: 256,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.L
+        });
+        if (holder.querySelector("canvas, img")) {
+          isRendered = true;
+        }
+      } catch (e3) {
+        console.warn(`[QR Gen] JSON Level L failed for Roll ${roll}:`, e3.message);
+        holder.innerHTML = "";
+      }
+    }
+
+    // Strategy 4: Minimal Roll + Name payload with Level M
+    if (!isRendered) {
+      try {
+        new QRCode(holder, {
+          text: `${roll}|${name}|${school}`,
+          width: 256,
+          height: 256,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+        if (holder.querySelector("canvas, img")) {
+          isRendered = true;
+        }
+      } catch (e4) {
+        console.warn(`[QR Gen] Minimal payload failed for Roll ${roll}:`, e4.message);
+        holder.innerHTML = "";
+      }
+    }
+  }
+
+  // Strategy 5: High-resolution server API fallback if client-side library is absent or all local attempts failed
+  if (!isRendered) {
+    const fallbackText = encodeURIComponent(pipePayload);
+    const img = document.createElement("img");
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=256x256&margin=1&data=${fallbackText}`;
+    img.alt = `Student QR ${roll}`;
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "contain";
+    img.style.imageRendering = "pixelated";
+    holder.appendChild(img);
+  }
 }
 
 function createStudentCard(student) {
@@ -785,19 +924,6 @@ function createStudentCard(student) {
   card.className = "id-card-wrapper";
   const uniqueId = `qr-${student.roll}-${studentsList.length}-${Math.random().toString(36).substring(2, 7)}`;
 
-  // Compact structured QR payload (text fields for instant high-speed scanning)
-  const qrPayload = JSON.stringify({
-    roll: student.roll,
-    name: student.name,
-    father: student.father,
-    dob: student.dob,
-    cls: student.cls,
-    school: student.school,
-    udise: student.udise,
-    dist: student.dist,
-    block: student.block
-  });
-
   card.innerHTML = `
     <!-- Exact Physical CR80 Size Card (85.6mm × 54mm) -->
     <div class="student-id-card">
@@ -805,8 +931,8 @@ function createStudentCard(student) {
 
       <div class="id-card-header">
         <div class="school-title">${escapeHtml(student.school || 'GHS SODHI NAGAR')}</div>
-        <div class="school-udise">UDISE: ${escapeHtml(student.udise || '03010100101')}</div>
-        <div class="school-loc">Block: ${escapeHtml(student.block || 'Ghall Khurd')} • Dist: ${escapeHtml(student.dist || 'Firozpur')}</div>
+        <div class="school-udise">UDISE: ${escapeHtml(student.udise || '03110805402')}</div>
+        <div class="school-loc">Block: ${escapeHtml(student.block || 'GHALL KHURD')} • Dist: ${escapeHtml(student.dist || 'FEROZEPUR')}</div>
       </div>
       
       <div class="id-card-body">
@@ -837,7 +963,7 @@ function createStudentCard(student) {
           </div>
           <div class="detail-row">
             <span class="detail-label">School Code:</span>
-            <span class="detail-value">${escapeHtml(student.udise || '03010100101')}</span>
+            <span class="detail-value">${escapeHtml(student.udise || '03110805402')}</span>
           </div>
         </div>
 
@@ -862,23 +988,15 @@ function createStudentCard(student) {
 
   badgeContainer.appendChild(card);
 
-  setTimeout(() => {
-    const holder = document.getElementById(uniqueId);
-    if (holder) {
-      if (typeof QRCode !== "undefined") {
-        new QRCode(holder, {
-          text: qrPayload,
-          width: 82,
-          height: 82,
-          colorDark: "#1e3a8a",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.M,
-        });
-      } else {
-        holder.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=82x82&data=${encodeURIComponent(qrPayload)}" alt="QR">`;
-      }
+  // Synchronously render QR code without fragile setTimeout delay
+  const holder = card.querySelector(`#${uniqueId}`);
+  if (holder) {
+    renderStudentQRCode(holder, student);
+    // Asynchronous double-check to guarantee element exists in all browser environments
+    if (!holder.querySelector("canvas, img")) {
+      setTimeout(() => renderStudentQRCode(holder, student), 40);
     }
-  }, 50);
+  }
 }
 
 function setCardZoom(zoomLevel, btn) {
@@ -895,6 +1013,7 @@ function clearAllBadges() {
 
 function downloadQRCode(holderId, roll) {
   const holder = document.getElementById(holderId);
+  if (!holder) return;
   const img = holder.querySelector("img");
   const canvas = holder.querySelector("canvas");
 
